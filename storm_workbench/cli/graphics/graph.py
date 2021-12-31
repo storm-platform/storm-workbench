@@ -5,28 +5,39 @@
 # storm-workbench is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-import click
+from typing import List, Tuple, Union
+
 from igraph import Graph
 
-from typing import List, Tuple, Union
+try:
+    from asciidag.graph import Graph as AsciiGraph
+    from asciidag.node import Node
+except ImportError:
+    raise ModuleNotFoundError(
+        "To use the Graph visualization module, please, install the asciidag library: "
+        "`pip install asciidag` or `poetry add asciidag`"
+    )
 
 
 def _ascii_dag(graph: Graph) -> Union[None, "AsciiGraph"]:
     """Generate a ASCII Directed Acyclic Graph (DAG).
+
     Args:
         graph (igraph.Graph): Graph instance that is used to generate the ASCII DAG.
+
     Returns:
-        Union[None, AsciiGraph]: If the graph is displayed, the created graph instance is returned. Otherwise,
-        None will be returned.
+        Union[None, AsciiGraph]: If the graph is displayed, the created graph
+        instance is returned. Otherwise, None will be returned.
     """
-    from asciidag.graph import Graph as AsciiGraph
-    from asciidag.node import Node
 
     def vertex_parents(vertex_id: int, edgelist: List[Tuple]) -> List[Tuple]:
         """Return all vertex parents based on a edge list.
+
         Args:
             vertex_id (int): Vertex ID.
+
             edgelist (List[Tuple]): List with tuples with all graph edges.
+
         Returns:
             List[Tuple]: Edges that is related to `vertex_id`.
         """
@@ -52,23 +63,12 @@ def _ascii_dag(graph: Graph) -> Union[None, "AsciiGraph"]:
 
 
 def show_ascii_graph(graph: Graph):
-    """Display the project execution graph on the terminal.
+    """Display the Executions DAG on the terminal.
+
     Args:
-        graph (Graph): Project graph instance.
+        graph (Graph): Graph Index object.
+
     Returns:
-        None: Graph will be presented on the CLI terminal
-    Raises:
-        ModuleNotFoundError: When `asciidag` library is not avaliable.
+        None: Graph will be presented on the CLI terminal.
     """
-    try:
-        _graph = _ascii_dag(graph)
-
-        if not _graph:
-            click.secho("Project Graph is empty...", bold=True)
-
-    except ModuleNotFoundError:
-        click.secho(
-            "To visualize the graph it is necessary to install the `asciidag` "
-            "library. To do so, use:"
-        )
-        click.secho("\t pip install asciidag", bold=True)
+    _graph = _ascii_dag(graph)

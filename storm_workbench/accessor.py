@@ -17,6 +17,8 @@ class SessionAccessor:
         """Initializer.
 
         Args:
+            config (Dynaconf): Workbench configuration object.
+
             session (ReproducibleSession): Reproducible Session object.
         """
         self._config = config
@@ -24,15 +26,16 @@ class SessionAccessor:
 
     @property
     def index(self):
+        """Execution index."""
         return self._session.index
 
     @property
     def op(self):
+        """Reproducible Operations."""
         return self._session.op
 
     def save_session(self):
         """Save the current session object."""
-
         workbench_storage = self._config.tool.storm.storage
         PicklePersistenceContainer.save(
             self._session.index.graph_manager.graph, workbench_storage / "meta"

@@ -5,12 +5,10 @@
 # storm-workbench is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-import os
-
-import re
 import base64
 import hashlib
-
+import os
+import re
 from pathlib import Path
 
 

@@ -32,3 +32,17 @@ def aesthetic_print(message: Any, wait_time: int = 1, **kwargs):
 
     console.print(message, **kwargs.get("print_options", {}))
     sleep(wait_time)
+
+
+def aesthetic_traceback(**kwargs):
+    """Create aesthetic traceback.
+
+    Args:
+        kwargs: Arguments to the ``rich.console.Console.print_exception``.
+
+    See:
+        For more information about the ``rich.console.Console.print_exception``, please
+        go to the official documentation: <https://rich.readthedocs.io/en/latest/traceback.html>
+    """
+    console = Console()
+    console.print_exception(**kwargs)

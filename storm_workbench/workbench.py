@@ -15,6 +15,8 @@ from storm_workbench.settings import (
 
 
 class Workbench:
+    """Workbench class."""
+
     def __init__(self, cwd: Path = None):
 
         self._workbench_config = load_workbench_configuration(cwd)
@@ -22,12 +24,15 @@ class Workbench:
 
     @property
     def config(self):
+        """Workbench configuration object."""
         return self._workbench_config
 
     @property
     def session(self):
+        """Workbench reproducible session."""
         return SessionAccessor(self._workbench_config, self._reproducible_session)
 
     @property
     def service(self):
+        """Workbench service session."""
         return object()  # ToDo: Service class.

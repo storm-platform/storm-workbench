@@ -10,8 +10,8 @@ from typing import List, Tuple
 from rich.table import Table
 from storm_core.index.graph import VertexStatus
 
-from storm_workbench.constants import GraphStyleConfig
 from storm_workbench.cli.graphics.aesthetic import aesthetic_print
+from storm_workbench.constants import GraphStyleConfig
 
 
 def table_simple(title: str, columns: List[str], rows: List[Tuple]) -> Table:
@@ -41,11 +41,10 @@ def table_simple(title: str, columns: List[str], rows: List[Tuple]) -> Table:
 
 
 def show_table_execution_index_status(graph_df: "pandas.core.frame.DataFrame"):
-    """Print a graph as a table.
+    """Show the indexed executions in a status table.
 
     Args:
-
-        graph_df (pandas.core.frame.DataFrame): Graph vertices that will be printed.
+        graph_df (pandas.core.frame.DataFrame): Graph vertices with the indexed executions.
 
     Returns:
         None: The table will be printed on the terminal.
@@ -82,7 +81,7 @@ def show_table_execution_index_status(graph_df: "pandas.core.frame.DataFrame"):
         )
 
     table = table_simple(
-        title="[bold]Execution status[/bold]",
+        title="[bold]Executions status[/bold]",
         columns=columns,
         rows=rows,
     )

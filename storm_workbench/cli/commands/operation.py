@@ -6,25 +6,32 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 import json
+from pathlib import Path
+from zipfile import ZipFile
+
 import click
 import rich.markdown
-
-from pathlib import Path
-
+from storm_core.helper.exporter import BagItExporter
 from storm_core.parser import ShellCommandParser, load_stormfile
 
+from storm_workbench.cli.graphics.aesthetic import aesthetic_print, aesthetic_traceback
+from storm_workbench.constants import WorkbenchDefinitions
 from storm_workbench.workbench import Workbench
-from storm_workbench.cli.graphics.aesthetic import aesthetic_print
 
 
 @click.group(name="op")
 @click.pass_context
 def operation(ctx):
-    """Reproducible experiment executions."""
+    """Reproducible operations."""
     if ctx.obj is None:
         ctx.obj = dict()
 
-    ctx.obj["workbench"] = Workbench()
+    try:
+        ctx.obj["workbench"] = Workbench()
+    except:
+        aesthetic_traceback(show_locals=True)
+
+        exit()
 
 
 @operation.command(name="run")
@@ -36,6 +43,7 @@ def operation(ctx):
     type=click.Path(
         exists=True, resolve_path=True, path_type=Path, dir_okay=False, file_okay=True
     ),
+    help="Stormfile with the processing Pipeline definition.",
 )
 @click.pass_obj
 def run(obj, command=None, stormfile: Path = None):
@@ -46,122 +54,205 @@ def run(obj, command=None, stormfile: Path = None):
     For example, if you want to run a python script and then reproduce it, you can use `Storm Workbench` to help you.
 
     To do this, the execution that is normally done like this:
+
        $ python3 myscript.py
 
-    should look like this:
-       $ workbench operation execute python3 myscript.py
+    with the Storm Workbench will look like this:
+
+       $ workbench op run python3 myscript.py
 
     The main difference here is that now, the execution is controlled by `Storm Workbench`, which allows you to extract
-    information from the execution and save all the elements needed to re-run the project.
+    information from the execution and save all the elements needed to reproduce the execution.
+
+    This command is created using the ReproZip tool. Many thanks to the ReproZip team.
     """
-    aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Reproducible execution", 0)
+    aesthetic_print(
+        "[bold cyan]Storm Workbench[/bold cyan]: Reproducible Execution :crystal_ball:",
+        0,
+    )
+
+    # parsing the command that will
+    # be executed.
+    aesthetic_print(
+        "[bold cyan]Storm Workbench[/bold cyan]: Parsing the command :key:", 1
+    )
 
     execution_plan = None
-    if command:
-        execution_plan = ShellCommandParser.parse(list(command))
+    try:
+        if command:
+            execution_plan = ShellCommandParser.parse(list(command))
 
-    elif stormfile:
-        execution_plan = load_stormfile(stormfile)
+        elif stormfile:
+            execution_plan = load_stormfile(stormfile)
 
-    else:
-        aesthetic_print("[bold red]Storm Workbench[/bold red]: Problems founded", 0)
-        aesthetic_print(
-            rich.markdown.Markdown(
-                "To run a reproducible command you need to define a ``command`` or specify "
-                "a Stormfile (``--stormfile``)."
-            ),
-            0,
-        )
+        else:
+            aesthetic_print(
+                "[bold red]Storm Workbench[/bold red]: Problems founded :disappointed_relieved:",
+                0,
+            )
+            aesthetic_print(
+                rich.markdown.Markdown(
+                    "To run a reproducible command you need to define a ``command`` or specify "
+                    "a Stormfile (``--stormfile``)."
+                ),
+                0,
+            )
 
-        return
+            return
+    except:
+        aesthetic_traceback(show_locals=True)
+
+    # running!
+    aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Running :fire:", 1)
 
     try:
         workbench = obj["workbench"]
-        workbench.session.op.execute(execution_plan)
+        workbench.session.op.run(execution_plan)
 
         workbench.session.save_session()
     except RuntimeError:
-        aesthetic_print("[bold red]Storm Workbench[/bold red]: Problems founded")
+        aesthetic_print(
+            "[bold red]Storm Workbench[/bold red]: Problems founded :disappointed_relieved:"
+        )
         aesthetic_print(
             rich.markdown.Markdown(
-                "A new command cannot be executed, there are commands in the "
-                "execution graph that need to be **updated**. You can check the graph "
-                "status using `workbench graph show --as-table-status`."
-                "To update the graph you can use the `bdcrrm-cli production remake` "
-                "command."
+                "Some commands are **outdated**! Update them to export the compendium."
             )
         )
-    # except BaseException as e:
-    #     aesthetic_print("[bold red]Storm Workbench[/bold red]: Problems founded")
-    #     aesthetic_print(
-    #         rich.markdown.Markdown(f"Error to register the specified command: {e}")
-    #     )
+    except:
+        aesthetic_traceback(show_locals=True)
 
 
 @operation.command(name="update")
 @click.pass_obj
 def update(obj):
-    """Update outdated commands.
+    """Update outdated executions.
 
-    The command `rerun` identifies and re-executes all outdated commands.
-    This option is useful when multiple runs need to be rerun because of changing results from other scripts.
-    A vertex command is considered outdated when any of its predecessors have a run performed after its creation.
+    This command identifies and re-executes all outdated executions, which is useful when multiple runs need to be
+    updated because of changing results from other scripts. An execution is considered outdated when any of its
+    predecessors have a run performed after its creation.
 
-    For example:
-      The execution graph below has three associated commands:
-         *(Command 1) -> *(Command 2) -> *(Command 3)
+    For example, below we have three associated executions:
 
-    All are up to date (Imagine). If the vertex `Command 2` is executed again, all its subsequent ones will
-    be out of date since they depend on the result generated by this command. Following this rule, in this
-    example, the vertex `Command 3` is outdated.
-    Using the `remake` command, the out-of-date nodes are automatically identified and re-executed.
+         *(Execution 1) -> *(Execution 2) -> *(Execution 3)
+
+    All are up to date (Imagine). If the `Execution 2` is executed again, all its subsequent ones will
+    be out of date since they depend on the result generated by this Execution. Following this rule, in this
+    example, the `Execution 3` is outdated.
     """
-    aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Reproducible (re)run", 0)
+    aesthetic_print(
+        "[bold cyan]Storm Workbench[/bold cyan]: Reproducible Update :leftwards_arrow_with_hook:",
+        0,
+    )
 
     workbench = obj["workbench"]
+    try:
+        workbench.session.op.update()
+        workbench.session.save_session()
 
-    workbench.session.op.rerun()
-    workbench.session.save_session()
-
-    aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Finished!", 0)
+        aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Finished!", 0)
+    except:
+        aesthetic_traceback(show_locals=True)
 
 
 @operation.command(name="rerun")
 @click.option(
+    "--package",
+    required=True,
+    type=click.Path(
+        exists=True, resolve_path=True, path_type=Path, dir_okay=False, file_okay=True
+    ),
+    help="Path to the Compendium Package that will be reproduced.",
+)
+@click.option(
+    "-o",
     "--output-directory",
     required=True,
     type=click.Path(
-        exists=True, resolve_path=True, path_type=Path, dir_okay=True, file_okay=False
+        exists=False, resolve_path=True, path_type=Path, dir_okay=True, file_okay=False
     ),
+    help="Directory where the results will be saved.",
 )
 @click.option(
-    "-files",
+    "-f",
     "--required-files-reference",
     required=False,
     type=click.Path(
         exists=True, resolve_path=True, path_type=Path, dir_okay=False, file_okay=True
     ),
+    help="JSON file with the reference (Path and Checksum) files required to reproduce the experiment.",
 )
-@click.option("-env", required=False, multiple=True)
-@click.pass_obj
-def rerun(obj, output_directory: Path, required_files_reference: Path, env):
-    """Reproduce existing experiment."""
-    aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Experiment reproduction.")
-    workbench = obj["workbench"]
+@click.option(
+    "-e",
+    "--env",
+    required=False,
+    multiple=True,
+    help="Environment variable required to reproduce the experiment (Multiple values allowed).",
+)
+@click.option(
+    "-p",
+    "--processes",
+    required=False,
+    type=int,
+    default=2,
+    help="Number of processes used to calculate the package files checksum during the import.",
+)
+def rerun(
+    package, output_directory: Path, required_files_reference: Path, env, processes
+):
+    """Reproduce an experiment.
 
-    if required_files_reference:
+    This command load a Compendium package and reproduce it.
+    """
+    aesthetic_print(
+        "[bold cyan]Storm Workbench[/bold cyan]: Experiment reproduction :alembic:"
+    )
+
+    try:
+        output_directory.mkdir(parents=True, exist_ok=True)
         aesthetic_print(
-            "[bold cyan]Storm Workbench[/bold cyan]: Loading the required files reference.",
-            1,
+            "[bold cyan]Storm Workbench[/bold cyan]: Checking the workbench definition :page_facing_up:"
         )
 
-        required_files_reference = json.load(required_files_reference.open())
+        # extracting the workbench definition file
+        with ZipFile(package, "r") as izip:
+            izip.extract(
+                f"data/{WorkbenchDefinitions.WB_DEFINITION_FILE}", path=output_directory
+            )
 
-    aesthetic_print(
-        "[bold cyan]Storm Workbench[/bold cyan]: Reproducing the experiment.", 0
-    )
-    workbench.session.op.reproduce(
-        output_directory, required_files_reference or None, env or None
-    )
+        # defining the working directories
+        results_output = output_directory / "results"
+        workbench_definition = (
+            output_directory / "data" / WorkbenchDefinitions.WB_DEFINITION_FILE
+        )
 
+        # extracting the files from the package
+        aesthetic_print(
+            "[bold cyan]Storm Workbench[/bold cyan]: Loading the workbench data :game_die:"
+        )
+        BagItExporter.load(
+            package,
+            Workbench(workbench_definition).config.tool.storm.storage,
+            processes=processes,
+        )
+
+        # creating the workbench context
+        workbench = Workbench(workbench_definition)
+
+        if required_files_reference:
+            aesthetic_print(
+                "[bold cyan]Storm Workbench[/bold cyan]: Loading the required files reference :file_cabinet:"
+            )
+
+            required_files_reference = json.load(required_files_reference.open())
+
+        # reproducing!
+        aesthetic_print(
+            "[bold cyan]Storm Workbench[/bold cyan]: Reproducing the experiment :dragon:",
+        )
+        workbench.session.op.rerun(
+            results_output, required_files_reference or None, env or None
+        )
+    except:
+        aesthetic_traceback(show_locals=True)
     aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Finished.", 0)

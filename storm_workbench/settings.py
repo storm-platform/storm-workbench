@@ -10,16 +10,14 @@ from pathlib import Path
 from typing import Type
 
 from dynaconf import Dynaconf
-
 from storm_core import ReproducibleSession
 from storm_core.execution import (
     ExecutionEngine,
     ExecutionEngineFilesConfig,
     ExecutionEngineServicesConfig,
 )
-
-from storm_core.index.graph import GraphManager
 from storm_core.helper.persistence import PicklePersistenceContainer
+from storm_core.index.graph import GraphManager
 
 from storm_workbench.constants import WorkbenchDefinitions
 from storm_workbench.location import create_reproducible_storage
@@ -99,7 +97,9 @@ def load_workbench_configuration(cwd: Path = None) -> Dynaconf:
 
     # loading configurations
     workbench_configuration = Dynaconf(settings_files=[workbench_definition_file])
+
     workbench_configuration.tool.storm.basepath = workbench_definition_file.parent
+    workbench_configuration.tool.storm.definition_file = workbench_definition_file
 
     return workbench_configuration
 
