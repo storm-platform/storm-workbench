@@ -39,7 +39,8 @@ asciidag = { version = "^0.2.0", optional = true }
 # Storm
 #
 storm-git = { git = "https://github.com/storm-platform/storm-git" }
-storm-core = { git = "https://github.com/storm-platform/storm-core.git", extras = ["ray-backend", "paradag-backend", "persistence-helper", "plotting-helper", "exporter-helper"] }
+storm-client = { git = "https://github.com/storm-platform/storm-client", rev = "master" }
+storm-core = { git = "https://github.com/storm-platform/storm-core.git", extras = ["ray-backend", "paradag-backend", "persistence-helper", "plotting-helper", "exporter-helper"], rev = "master" }
 
 
 [tool.poetry.extras]
