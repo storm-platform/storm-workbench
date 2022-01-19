@@ -42,7 +42,7 @@ def aesthetic_traceback(**kwargs):
 
     See:
         For more information about the ``rich.console.Console.print_exception``, please
-        go to the official documentation: <https://rich.readthedocs.io/en/latest/traceback.html>
+        check the official documentation: <https://rich.readthedocs.io/en/latest/traceback.html>
     """
     console = Console()
     console.print_exception(**kwargs)

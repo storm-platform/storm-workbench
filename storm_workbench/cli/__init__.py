@@ -5,10 +5,8 @@
 # storm-workbench is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-try:
-    import rich
-except ImportError:
-    raise ModuleNotFoundError(
-        "To use the CLI command, please, install the rich library: "
-        "`pip install rich` or `poetry add rich`"
-    )
+BASE_CLI_MODULE = "storm_workbench.cli.commands"
+"""Module where the CLI commands are stored."""
+
+COMMAND_MODULES = ["env", "exec", "index", "export", "import", "service"]
+"""CLI Command modules (Relative to Base CLI module)."""

@@ -6,11 +6,9 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 import click
+from importlib import import_module
 
-from storm_workbench.cli.commands.environment import env
-from storm_workbench.cli.commands.index import index
-from storm_workbench.cli.commands.operation import operation
-from storm_workbench.cli.commands.workbench import init
+from . import BASE_CLI_MODULE, COMMAND_MODULES
 
 
 @click.group()
@@ -19,7 +17,9 @@ def workbench_cli():
     """Storm Workbench CLI."""
 
 
-workbench_cli.add_command(env)
-workbench_cli.add_command(init)
-workbench_cli.add_command(index)
-workbench_cli.add_command(operation)
+# Registering the available commands.
+for command_module in COMMAND_MODULES:
+    command_module_path = f"{BASE_CLI_MODULE}.{command_module}"
+
+    mod = import_module(command_module_path)
+    mod.register_command(workbench_cli)

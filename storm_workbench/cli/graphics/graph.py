@@ -49,7 +49,15 @@ def _ascii_dag(graph: Graph) -> Union[None, "AsciiGraph"]:
 
     # generate ascii nodes
     edgelist = graph.get_edgelist()
-    nodes = {v.index: Node(f"{v['name']} ({v['command']})") for v in graph.vs}
+
+    nodes = {
+        v.index: Node(
+            f"({v['command']})"
+            if "command" in v.attributes()
+            else v["name"]
+        )
+        for v in graph.vs
+    }
 
     # connect the nodes
     for vertex in graph.vs:

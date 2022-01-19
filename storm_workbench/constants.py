@@ -5,21 +5,29 @@
 # storm-workbench is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
+#
+# Storm Core definitions
+#
+CORE_EXECUTOR_ENTRYPOINT = "core.executors"
 
-class WorkbenchDefinitions:
-    """Base workbench configurations."""
+#
+# Storm Core descriptor
+#
+import storm_core
 
-    WB_DEFINITION_FILE = "workbench.toml"
+# ToDo: This metadata should be provided by the Storm Core ?
+CORE_DESCRIPTOR_NAME = "Storm Core"
+CORE_DESCRIPTOR_URI = "https://github.com/storm-platform/storm-core"
+CORE_DESCRIPTION_VERSION = storm_core.__version__
 
-    WB_DEFAULT_EXECUTOR = "paradag.parallel"
+#
+# Storm Workbench definitions.
+#
+WB_DEFINITION_FILE = "workbench.toml"
 
-    WB_AVAILABLE_EXECUTORS = {
-        "ray.distributed": "storm_core.execution.executor.backend.ray.backend:RayBackend",
-        "paradag.parallel": "storm_core.execution.executor.backend.paradag.backend:ParadagBackend",
-    }
+WB_DEFAULT_EXECUTOR = "paradag.parallel"
 
-
-class GraphStyleConfig:
-    """Graph Style configuration."""
-
-    GRAPH_DEFAULT_VERTICES_COLOR = {"updated": "green", "outdated": "yellow"}
+#
+# Graph default visualization definitions.
+#
+GRAPH_DEFAULT_VERTICES_COLOR = {"updated": "green", "outdated": "yellow"}
