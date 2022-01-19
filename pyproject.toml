@@ -6,7 +6,7 @@ license = "MIT"
 description = "Reproducible Research management tool"
 authors = ["Felipe Menino Carlos <felipe.carlos@inpe.br>"]
 
-include = ["storm_workbench/cli/commands/templates/*"]
+include = ["storm_workbench/templates/*"]
 
 classifiers = [
     'Development Status :: 1 - Planning',
@@ -24,6 +24,11 @@ classifiers = [
 python = "^3.8"
 
 #
+# General
+#
+"hurry.filesize" = "^0.9"
+
+#
 # Configuration
 #
 tomlkit = "^0.8.0"
@@ -36,20 +41,50 @@ rich = { version = "^10.16.1", optional = true }
 asciidag = { version = "^0.2.0", optional = true }
 
 #
+# Exporters (Optional)
+#
+
+# BagIt
+bagit = { version = "^1.8.1", optional = true }
+
+#
 # Storm
 #
 storm-git = { git = "https://github.com/storm-platform/storm-git" }
+storm-graph = { git = "https://github.com/storm-platform/storm-graph.git", rev = "main" }
 storm-client = { git = "https://github.com/storm-platform/storm-client", rev = "master" }
 storm-core = { git = "https://github.com/storm-platform/storm-core.git", extras = ["ray-backend", "paradag-backend", "persistence-helper", "plotting-helper", "exporter-helper"], rev = "master" }
 
+#
+# Database
+#
+peewee = "^3.14.8"
+randomname = "^0.1.5"
 
-[tool.poetry.extras]
-cli = ["rich", "asciidag"]
+#
+# Processing
+#
+joblib = "^1.1.0"
 
-[tool.poetry.scripts]
-workbench = "storm_workbench.cli.cli:workbench_cli"
+#
+# Templating and reports
+#
+Jinja2 = "^3.0.3"
+gh-md-to-html = { extras = ["offline_conversion"], version = "^1.21.2" }
 
 [tool.poetry.dev-dependencies]
+black = "^21.12b0"
+
+[tool.poetry.extras]
+# CLI
+cli = ["rich", "asciidag"]
+
+# BagIt (Exporter)
+exporter-bagit = ["bagit"]
+
+[tool.poetry.scripts]
+# CLI
+workbench = "storm_workbench.cli.cli:workbench_cli"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
