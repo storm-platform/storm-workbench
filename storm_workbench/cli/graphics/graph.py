@@ -7,16 +7,9 @@
 
 from typing import List, Tuple, Union
 
+from asciidag.graph import Graph as AsciiGraph
+from asciidag.node import Node
 from igraph import Graph
-
-try:
-    from asciidag.graph import Graph as AsciiGraph
-    from asciidag.node import Node
-except ImportError:
-    raise ModuleNotFoundError(
-        "To use the Graph visualization module, please, install the asciidag library: "
-        "`pip install asciidag` or `poetry add asciidag`"
-    )
 
 
 def _ascii_dag(graph: Graph) -> Union[None, "AsciiGraph"]:
@@ -51,11 +44,7 @@ def _ascii_dag(graph: Graph) -> Union[None, "AsciiGraph"]:
     edgelist = graph.get_edgelist()
 
     nodes = {
-        v.index: Node(
-            f"({v['command']})"
-            if "command" in v.attributes()
-            else v["name"]
-        )
+        v.index: Node(f"({v['command']})" if "command" in v.attributes() else v["name"])
         for v in graph.vs
     }
 
