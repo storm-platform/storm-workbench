@@ -114,4 +114,5 @@ def find_workbench_definition_file(cwd: Path = None) -> Path:
             return workbench_file
 
     else:
+        # Maybe we need to change this to another place!
         raise RuntimeError("Workbench not found!")

@@ -9,7 +9,7 @@
 #
 # Application name
 #
-name = "{{project_name}}"
+name = "{{workbench_name}}"
 
 #
 # Files Checksum Algorithm

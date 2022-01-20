@@ -8,5 +8,13 @@
 BASE_CLI_MODULE = "storm_workbench.cli.commands"
 """Module where the CLI commands are stored."""
 
-COMMAND_MODULES = ["env", "exec", "index", "export", "import", "service"]
+COMMAND_MODULES = [
+    "env",
+    "exec",
+    "index",
+    "export",
+    "import",
+    "service",
+    "workbench",
+]
 """CLI Command modules (Relative to Base CLI module)."""
