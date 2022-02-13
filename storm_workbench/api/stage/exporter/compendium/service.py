@@ -130,7 +130,7 @@ class CompendiumExporterService(BaseExporterService):
 
         write_template(
             workbench_definition_file,
-            "workbench.toml",
+            "config/workbench.toml",
             mode="reproduction",
             executor="paradag.parallel",
             project_name=self._config.definitions.tool.storm.name,
