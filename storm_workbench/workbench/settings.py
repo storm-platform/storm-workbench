@@ -116,3 +116,37 @@ def find_workbench_definition_file(cwd: Path = None) -> Path:
     else:
         # Maybe we need to change this to another place!
         raise RuntimeError("Workbench not found!")
+
+
+def find_secrets_file(cwd: Path = None) -> Union[None, Path]:
+    """Find for a workbench secrets file.
+
+    This function finds a workbench secrets file in the ``cwd`` directory
+    and their parents.
+
+    Args:
+        cwd (Path): Base directory where the search will be start.
+
+    Returns:
+        Union[None, Path]: Path to the founded workbench secrets file or None when the secrets file
+                           is not available.
+
+    Note:
+        This function was adapted from the ``python-poetry`` source code. Currently, we only support the Linux
+        implementation.
+
+    See:
+        See the original implementation of this function in the ``python-poetry``
+        repository: <https://github.com/python-poetry/poetry-core/blob/af08f1ce720da467c9bf3d43eed3d9ebaf4ad7fb/src/poetry/core/factory.py#L438>
+    """
+    cwd = Path(cwd or Path.cwd())
+    candidates = [cwd]
+    candidates.extend(cwd.parents)
+
+    for path in candidates:
+        secrets_file = path / constants.WB_SECRETS_FILE
+
+        if secrets_file.exists():
+            return secrets_file
+
+    return None

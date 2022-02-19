@@ -11,7 +11,12 @@ import click
 
 from storm_workbench.cli.graphics.aesthetic import aesthetic_print, aesthetic_traceback
 from storm_workbench.template import write_template
-from storm_workbench.workbench.settings import find_workbench_definition_file
+from storm_workbench.workbench.settings import (
+    find_workbench_definition_file,
+    find_secrets_file,
+)
+
+from storm_workbench import constants
 
 
 @click.command(name="init")
@@ -34,22 +39,38 @@ def init():
     """
     aesthetic_print(gretting_message, 2)
 
-    create = True
+    secrets_file = None
     workbench_file = None
+
+    overwrite_secrets = True
+    overwrite_workbench = True
 
     try:
         workbench_file = find_workbench_definition_file()
 
-        create = click.confirm(
+        overwrite_workbench = click.confirm(
             f"Existing Workbench found!  Do you want to go ahead and "
             f"create a new definition file? (This will overwrite the "
             f"current configuration)",
             abort=False,
         )
     except:
-        workbench_file = Path.cwd() / "workbench.toml"
+        workbench_file = Path.cwd() / constants.WB_DEFINITION_FILE
 
-    if create:
+    # finding for a secret files
+    secrets_file = find_secrets_file()
+
+    if secrets_file:
+        overwrite_secrets = click.confirm(
+            f"Existing `.secrets` found!  Do you want to go ahead and "
+            f"create a new `.secrets` file? (This will overwrite the "
+            f"current configuration)",
+            abort=False,
+        )
+    else:
+        secrets_file = Path.cwd() / constants.WB_SECRETS_FILE
+
+    if overwrite_workbench:
         try:
             aesthetic_print(
                 "[bold cyan]Storm Workbench[/bold cyan]: Creating a new workbench definition file.",
@@ -62,17 +83,21 @@ def init():
                 workbench_file, "config/workbench.toml", workbench_name=workbench_name
             )
 
-            aesthetic_print(
-                "[bold cyan]Storm Workbench[/bold cyan]: Creating the `.secrets.toml` file.",
-                0,
-            )
-
-            aesthetic_print(
-                "[bold cyan]Storm Workbench[/bold cyan]: Workbench is configured!.",
-                0,
-            )
         except:
             aesthetic_traceback(show_locals=True)
+
+    if overwrite_secrets:
+        aesthetic_print(
+            "[bold cyan]Storm Workbench[/bold cyan]: Creating the `.secrets.toml` file.",
+            0,
+        )
+
+        write_template(secrets_file, "config/secrets.toml")
+
+    aesthetic_print(
+        "[bold cyan]Storm Workbench[/bold cyan]: Workbench is configured!.",
+        0,
+    )
 
 
 def register_command(ctx):

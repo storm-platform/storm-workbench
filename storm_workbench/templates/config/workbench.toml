@@ -79,7 +79,7 @@ ignored_environment_variables = []
 type = "{{executor}}"
 {%- else -%}
 type = "paradag.parallel"
-{%- endif -%}
+{%- endif %}
 options = { }
 
 

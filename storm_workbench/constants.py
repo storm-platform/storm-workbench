@@ -23,6 +23,8 @@ CORE_DESCRIPTION_VERSION = storm_core.__version__
 #
 # Storm Workbench definitions.
 #
+WB_SECRETS_FILE = ".secrets.toml"
+
 WB_DEFINITION_FILE = "workbench.toml"
 
 WB_DEFAULT_EXECUTOR = "paradag.parallel"
