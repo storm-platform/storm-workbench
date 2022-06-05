@@ -6,7 +6,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 import click
-from storm_client.models.job import Job
+from storm_client.models.execution import ExecutionJob
 
 from storm_workbench.cli.commands.service.service import service
 from storm_workbench.cli.graphics.aesthetic import aesthetic_print, aesthetic_traceback
@@ -14,7 +14,7 @@ from storm_workbench.cli.graphics.table import aesthetic_table_by_document
 from storm_workbench.cli.graphics.tree import aesthetic_tree_base
 
 
-@service.group(name="job")
+@service.group(name="execution")
 def job():
     """Job Execution management."""
 
@@ -32,7 +32,7 @@ def job_describe(obj, id=None):
     workbench = obj["workbench"]
 
     try:
-        job_description = workbench.stage.ws.job.describe(id)
+        job_description = workbench.stage.ws.execution.describe(id)
         aesthetic_print(job_description, 0)
 
     except:
@@ -41,7 +41,7 @@ def job_describe(obj, id=None):
 
 @job.command(name="create")
 @click.option(
-    "--pipeline-id",
+    "--workflow-id",
     required=True,
     type=str,
     help="Pipeline Identifier.",
@@ -58,10 +58,10 @@ def job_create(obj, pipeline_id=None, service=None):
     workbench = obj["workbench"]
 
     try:
-        # creating the job object
-        job_obj = Job(pipeline_id=pipeline_id, service=service)
+        # creating the execution object
+        job_obj = ExecutionJob(pipeline_id=pipeline_id, service=service)
 
-        job_created = workbench.stage.ws.job.create(job_obj)
+        job_created = workbench.stage.ws.execution.create(job_obj)
 
         tree = aesthetic_tree_base(
             title="\n[bold]Job - Create[/bold]",
@@ -84,7 +84,7 @@ def job_create(obj, pipeline_id=None, service=None):
     help="Job Identifier.",
 )
 @click.option(
-    "--pipeline-id",
+    "--workflow-id",
     required=False,
     type=str,
     help="Pipeline Identifier.",
@@ -101,10 +101,10 @@ def job_update(obj, id=None, pipeline_id=None, service=None):
     workbench = obj["workbench"]
 
     try:
-        # creating the job object.
-        job_obj = Job(id=id, pipeline_id=pipeline_id, service=service)
+        # creating the execution object.
+        job_obj = ExecutionJob(id=id, pipeline_id=pipeline_id, service=service)
 
-        job_updated = workbench.stage.ws.job.update(job_obj)
+        job_updated = workbench.stage.ws.execution.update(job_obj)
 
         tree = aesthetic_tree_base(
             title="\n[bold]Job - Update[/bold]",
@@ -132,7 +132,7 @@ def job_delete(obj, id=None):
     workbench = obj["workbench"]
 
     try:
-        workbench.stage.ws.job.delete(id)
+        workbench.stage.ws.execution.delete(id)
         aesthetic_print("[blue]Status[/blue]: [green]Job Deleted[/green]", 0)
 
     except:
@@ -142,11 +142,11 @@ def job_delete(obj, id=None):
 @job.command(name="services")
 @click.pass_obj
 def job_services(obj):
-    """List the available job execution services."""
+    """List the available execution execution services."""
     workbench = obj["workbench"]
 
     try:
-        available_execution_services = workbench.stage.ws.job.services()
+        available_execution_services = workbench.stage.ws.execution.services()
 
         if available_execution_services:
             # declaring the table structure:
@@ -186,7 +186,7 @@ def job_search(obj, query):
     workbench = obj["workbench"]
 
     try:
-        job_search_result = workbench.stage.ws.job.search(_params=query)
+        job_search_result = workbench.stage.ws.execution.search(_params=query)
 
         if job_search_result:
             # declaring the table structure:
@@ -229,7 +229,7 @@ def job_start(obj, id=None, args=None):
     workbench = obj["workbench"]
 
     try:
-        job_started = workbench.stage.ws.job.start(id, _params=",".join(args))
+        job_started = workbench.stage.ws.execution.start(id, _params=",".join(args))
 
         tree = aesthetic_tree_base(
             title="\n[bold]Job - Execution[/bold]",

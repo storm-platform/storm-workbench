@@ -5,7 +5,7 @@
 # storm-workbench is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-from storm_client.models.job import Job, JobList, JobServiceList
+from storm_client.models.execution import ExecutionJob, ExecutionJobList, ExecutionJobServiceList
 
 from storm_workbench.api.backstage.accessor import BackstageAccessor
 from storm_workbench.api.backstage.argparser import parse_arguments_as_dict
@@ -15,8 +15,8 @@ from storm_workbench.api.stage.ws.service import BaseContextualizedService
 from storm_workbench.workbench.settings import WorkbenchDefinitionFile
 
 
-class JobService(BaseContextualizedService):
-    """Job service class.
+class ExecutionJobService(BaseContextualizedService):
+    """ExecutionJob service class.
 
     This class provides methods to use and manage the Job
     resources from the Storm WS.
@@ -38,13 +38,13 @@ class JobService(BaseContextualizedService):
 
             context (BaseStageService): Service which defines the context.
         """
-        super(JobService, self).__init__(config, backstage, context)
+        super(ExecutionJobService, self).__init__(config, backstage, context)
 
-    def create(self, job: Job):
-        """Create a new Job in the Storm WS.
+    def create(self, job: ExecutionJob):
+        """Create a new ExecutionJob in the Storm WS.
 
         Args:
-            job (Job): Job object.
+            job (ExecutionJob): ExecutionJob object.
 
         Returns:
             Job: Job object created in the Storm WS.
@@ -53,8 +53,8 @@ class JobService(BaseContextualizedService):
 
         return created_job
 
-    def update(self, job: Job):
-        """Update a Job in the Storm WS.
+    def update(self, job: ExecutionJob):
+        """Update a ExecutionJob in the Storm WS.
 
         Args:
             job (Job): Job object.
@@ -78,14 +78,14 @@ class JobService(BaseContextualizedService):
         """Delete a Job from the Storm WS.
 
         Args:
-            id_ (str): Job Identifier.
+            id_ (str): ExecutionJob Identifier.
 
         Returns:
-            None: The Job will be deleted from the Storm WS.
+            None: The ExecutionJob will be deleted from the Storm WS.
         """
         self._context.job.delete(id_)
 
-    def describe(self, id_: str, **kwargs) -> Job:
+    def describe(self, id_: str, **kwargs) -> ExecutionJob:
         """Describe a Storm WS Job.
 
         Args:
@@ -100,7 +100,7 @@ class JobService(BaseContextualizedService):
         return self._context.job.get(id_, **kwargs)
 
     @parse_arguments_as_dict(sep=",", argument_key_value_sep="=", inject_key="json")
-    def start(self, id_: str, **kwargs) -> Job:
+    def start(self, id_: str, **kwargs) -> ExecutionJob:
         """Start a Storm WS Job.
 
         Args:
@@ -113,19 +113,19 @@ class JobService(BaseContextualizedService):
         """
         return self._context.job.start_job(id_, request_options=kwargs)
 
-    def services(self, **kwargs) -> JobServiceList:
+    def services(self, **kwargs) -> ExecutionJobServiceList:
         """List the available services to execute the Storm WS Job.
 
         Args:
             kwargs: Extra parameters to the HTTP request library.
 
         Returns:
-            JobServiceList: List with available job execution services.
+            JobServiceList: List with available execution execution services.
         """
         return self._context.job.list_services(**kwargs)
 
     @parse_arguments_as_dict(sep="&", argument_key_value_sep=":")
-    def search(self, **kwargs) -> JobList:
+    def search(self, **kwargs) -> ExecutionJobList:
         """Search for jobs in the Storm WS.
 
         Args:

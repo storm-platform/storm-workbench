@@ -6,7 +6,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 import click
-from storm_client.models.deposit import Deposit
+from storm_client.models.deposit import DepositJob
 
 from storm_workbench.cli.commands.service.service import service
 from storm_workbench.cli.graphics.aesthetic import aesthetic_print, aesthetic_traceback
@@ -47,7 +47,7 @@ def deposit_describe(obj, id=None):
     help="Service where the Storm WS will send the Deposit bundle.",
 )
 @click.option(
-    "--pipeline-id",
+    "--workflow-id",
     required=True,
     multiple=True,
     help="Identifier of the Pipeline witch with will be included in the Deposit bundle.",
@@ -58,8 +58,8 @@ def deposit_create(obj, service=None, pipeline_id=None):
     workbench = obj["workbench"]
 
     try:
-        # creating the deposit object
-        deposit_obj = Deposit(service=service, pipelines=pipeline_id)
+        # creating the deposit job object
+        deposit_obj = DepositJob(service=service, pipelines=pipeline_id)
 
         deposit_created = workbench.stage.ws.deposit.create(deposit_obj)
 
@@ -90,7 +90,7 @@ def deposit_create(obj, service=None, pipeline_id=None):
     help="Service where the Storm WS will send the Deposit bundle.",
 )
 @click.option(
-    "--pipeline-id",
+    "--workflow-id",
     required=False,
     multiple=True,
     help="Identifier of the Pipeline witch with will be included in the Deposit bundle.",
@@ -101,8 +101,8 @@ def deposit_update(obj, id=None, service=None, pipeline_id=None):
     workbench = obj["workbench"]
 
     try:
-        # creating the deposit object
-        deposit_obj = Deposit(id=id, service=service, pipelines=pipeline_id)
+        # creating the deposit job object
+        deposit_obj = DepositJob(id=id, service=service, pipelines=pipeline_id)
 
         deposit_updated = workbench.stage.ws.deposit.update(deposit_obj)
 

@@ -82,7 +82,7 @@ class CompendiumExporterService(BaseExporterService):
         # the created directory will have the following structure:
         #  - compendia/
         #   - *.rpz
-        #  - pipeline/
+        #  - workflow/
         #   - meta
         #  - package.(md, html)
         #  - workbench.toml
@@ -106,11 +106,11 @@ class CompendiumExporterService(BaseExporterService):
             shutil.copy(compendium_package["key"], compendium_output_file)
             compendium_exported_bundles[compendium.name] = compendium_output_file
 
-        # pipeline directory
-        output_path_pipeline = temp_dir / "pipeline"
+        # workflow directory
+        output_path_pipeline = temp_dir / "workflow"
         output_path_pipeline.mkdir(exist_ok=True, parents=True)
 
-        # organizing the pipeline object
+        # organizing the workflow object
         pipeline_graph = self._backstage.execution.index.graph_manager.graph
 
         for compendium_vtx in pipeline_graph.vs:
@@ -119,7 +119,7 @@ class CompendiumExporterService(BaseExporterService):
                 "compendia", compendium_exported_bundles[compendium_vtx["name"]].name
             )
 
-        # exporting the pipeline graph metafile
+        # exporting the workflow graph metafile
         pipeline_meta_file = output_path_pipeline / "meta"
         PicklePersistenceContainer.save(pipeline_graph, pipeline_meta_file)
 

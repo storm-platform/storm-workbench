@@ -9,8 +9,8 @@ from storm_workbench.api.stage.base import BaseStageAccessor
 from storm_workbench.api.stage.ws.compendium.service import CompendiumService
 from storm_workbench.api.stage.ws.context.service import ContextService
 from storm_workbench.api.stage.ws.deposit.service import DepositService
-from storm_workbench.api.stage.ws.job.service import JobService
-from storm_workbench.api.stage.ws.pipeline.service import PipelineService
+from storm_workbench.api.stage.ws.execution.service import ExecutionJobService
+from storm_workbench.api.stage.ws.workflow.service import WorkflowService
 from storm_workbench.api.stage.ws.project.service import ProjectService
 from storm_workbench.api.stage.ws.service import StormWSService
 
@@ -43,14 +43,14 @@ class ResourceServicesAccessor(BaseStageAccessor):
         return CompendiumService(self._config, self._backstage)
 
     @property
-    def pipeline(self):
-        """Pipeline service accessor method."""
-        return PipelineService(self._config, self._backstage)
+    def workflow(self):
+        """Workflow service accessor method."""
+        return WorkflowService(self._config, self._backstage)
 
     @property
-    def job(self):
+    def execution(self):
         """Job service accessor method."""
-        return JobService(self._config, self._backstage)
+        return ExecutionJobService(self._config, self._backstage)
 
     @property
     def deposit(self):

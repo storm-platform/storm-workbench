@@ -81,7 +81,7 @@ def create_reproducible_session(
     # Graph manager
     graph_index = None
 
-    meta_dir = reproducible_storage / "pipeline"
+    meta_dir = reproducible_storage / "workflow"
     meta_dir.mkdir(exist_ok=True, parents=True)
 
     meta = meta_dir / "meta"

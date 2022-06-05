@@ -36,5 +36,5 @@ class SessionService:
         # ToDo: Maybe the "session" can be transformed in a class like the "configuration file".
         PicklePersistenceContainer.save(
             self._session.index.graph_manager.graph,
-            self._reproducible_storage / "pipeline/meta",
+            self._reproducible_storage / "workflow/meta",
         )

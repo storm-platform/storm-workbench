@@ -6,7 +6,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 
 import click
-from storm_client.models.pipeline import Pipeline
+from storm_client.models.workflow import Workflow
 
 from storm_workbench.cli.commands.service.service import service
 from storm_workbench.cli.graphics.aesthetic import aesthetic_print, aesthetic_traceback
@@ -14,7 +14,7 @@ from storm_workbench.cli.graphics.table import aesthetic_table_by_document
 from storm_workbench.cli.graphics.tree import aesthetic_tree_base
 
 
-@service.group(name="pipeline")
+@service.group(name="workflow")
 def pipeline():
     """Pipeline management."""
 
@@ -32,7 +32,7 @@ def pipeline_describe(obj, id=None):
     workbench = obj["workbench"]
 
     try:
-        compendium_description = workbench.stage.ws.pipeline.describe(id)
+        compendium_description = workbench.stage.ws.workflow.describe(id)
         aesthetic_print(compendium_description)
 
     except:
@@ -52,7 +52,7 @@ def pipeline_finish(obj, id):
     workbench = obj["workbench"]
 
     try:
-        pipeline_finished = workbench.stage.ws.pipeline.finish(id)
+        pipeline_finished = workbench.stage.ws.workflow.finish(id)
 
         tree = aesthetic_tree_base(
             title="\n[bold]Pipeline - Finish[/bold]",
@@ -98,12 +98,12 @@ def pipeline_create(obj, id=None, title=None, description=None, version=None):
     workbench = obj["workbench"]
 
     try:
-        # creating the pipeline object
-        pipeline = Pipeline(
+        # creating the workflow object
+        workflow = Workflow(
             id=id, metadata=dict(title=title, description=description, version=version)
         )
 
-        pipeline_created = workbench.stage.ws.pipeline.create(pipeline)
+        pipeline_created = workbench.stage.ws.workflow.create(workflow)
 
         tree = aesthetic_tree_base(
             title="\n[bold]Pipeline - Create[/bold]",
@@ -120,7 +120,7 @@ def pipeline_create(obj, id=None, title=None, description=None, version=None):
 
 @pipeline.command(name="add-compendium")
 @click.option(
-    "--pipeline-id",
+    "--workflow-id",
     required=False,
     type=str,
     help="Pipeline Identifier.",
@@ -137,7 +137,7 @@ def pipeline_add_compendium(obj, pipeline_id=None, compendium_id=None):
     workbench = obj["workbench"]
 
     try:
-        pipeline_updated = workbench.stage.ws.pipeline.add_compendium(
+        pipeline_updated = workbench.stage.ws.workflow.add_compendium(
             pipeline_id, compendium_id
         )
 
@@ -156,7 +156,7 @@ def pipeline_add_compendium(obj, pipeline_id=None, compendium_id=None):
 
 @pipeline.command(name="remove-compendium")
 @click.option(
-    "--pipeline-id",
+    "--workflow-id",
     required=False,
     type=str,
     help="Pipeline Identifier.",
@@ -173,7 +173,7 @@ def pipeline_remove_compendium(obj, pipeline_id=None, compendium_pid=None):
     workbench = obj["workbench"]
 
     try:
-        pipeline_updated = workbench.stage.ws.pipeline.remove_compendium(
+        pipeline_updated = workbench.stage.ws.workflow.remove_compendium(
             pipeline_id, compendium_pid
         )
 
@@ -204,7 +204,7 @@ def pipeline_search(obj, query):
     workbench = obj["workbench"]
 
     try:
-        pipeline_search_result = workbench.stage.ws.pipeline.search(q=query)
+        pipeline_search_result = workbench.stage.ws.workflow.search(q=query)
 
         if pipeline_search_result:
             # declaring the table structure:
@@ -247,7 +247,7 @@ def pipeline_delete(obj, id):
 
     if remove:
         try:
-            workbench.stage.ws.pipeline.delete(id)
+            workbench.stage.ws.workflow.delete(id)
             aesthetic_print("[blue]Status[/blue]: [green]Pipeline Deleted[/green]")
 
         except:

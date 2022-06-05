@@ -56,7 +56,7 @@ class ExecutionOperationService(BaseStageService):
 
             command (str): Command to be executed.
 
-            stormfile (Union[str, Path]): Stormfile with the description of an execution pipeline.
+            stormfile (Union[str, Path]): Stormfile with the description of an execution workflow.
 
         Returns:
             List[ExecutionCompendiumModel]: List of the created/updated execution compendium.
@@ -122,7 +122,7 @@ class ReExecutionOperationService(BaseStageService):
 
         - <current working directory>
          - compendia (Directory with the compendia environment files);
-         - pipeline (Directory with the complete workbench pipeline description);
+         - workflow (Directory with the complete workbench workflow description);
          - workbench.toml (Workbench description file).
 
     To create a file hierarchy as the described below, you can use the methods provided

@@ -5,7 +5,7 @@
 # storm-workbench is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 
-from storm_client.models.deposit import Deposit, DepositList, DepositServiceList
+from storm_client.models.deposit import DepositJob, DepositJobList, DepositJobServiceList
 
 from storm_workbench.api.backstage.accessor import BackstageAccessor
 from storm_workbench.api.backstage.argparser import parse_arguments_as_dict
@@ -40,7 +40,7 @@ class DepositService(BaseContextualizedService):
         """
         super(DepositService, self).__init__(config, backstage, context)
 
-    def create(self, deposit: Deposit):
+    def create(self, deposit: DepositJob):
         """Create a new Deposit in the Storm WS.
 
         Args:
@@ -53,7 +53,7 @@ class DepositService(BaseContextualizedService):
 
         return created_deposit
 
-    def describe(self, id_: str, **kwargs) -> Deposit:
+    def describe(self, id_: str, **kwargs) -> DepositJob:
         """Describe a Storm WS Deposit.
 
         Args:
@@ -67,7 +67,7 @@ class DepositService(BaseContextualizedService):
         return self._context.deposit.get(id_, **kwargs)
 
     @parse_arguments_as_dict(sep=",", argument_key_value_sep="=", inject_key="json")
-    def start(self, id_: str, **kwargs) -> Deposit:
+    def start(self, id_: str, **kwargs) -> DepositJob:
         """Start a Storm WS Deposit proces.
 
         Args:
@@ -80,7 +80,7 @@ class DepositService(BaseContextualizedService):
         """
         return self._context.deposit.start_deposit(id_, request_options=kwargs)
 
-    def update(self, deposit: Deposit):
+    def update(self, deposit: DepositJob):
         """Update a Deposit in the Storm WS.
 
         Args:
@@ -112,7 +112,7 @@ class DepositService(BaseContextualizedService):
         """
         self._context.deposit.delete(id_)
 
-    def services(self, **kwargs) -> DepositServiceList:
+    def services(self, **kwargs) -> DepositJobServiceList:
         """List the available services to Deposit.
 
         Args:
@@ -124,7 +124,7 @@ class DepositService(BaseContextualizedService):
         return self._context.deposit.list_services(**kwargs)
 
     @parse_arguments_as_dict(sep="&", argument_key_value_sep=":")
-    def search(self, **kwargs) -> DepositList:
+    def search(self, **kwargs) -> DepositJobList:
         """Search for deposit requests in the Storm WS.
 
         Args:
