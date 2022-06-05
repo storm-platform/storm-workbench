@@ -47,9 +47,9 @@ class ExecutionJobService(BaseContextualizedService):
             job (ExecutionJob): ExecutionJob object.
 
         Returns:
-            Job: Job object created in the Storm WS.
+            ExecutionJob: Job object created in the Storm WS.
         """
-        created_job = self._context.job.create(job)
+        created_job = self._context.execution.create(job)
 
         return created_job
 
@@ -57,15 +57,15 @@ class ExecutionJobService(BaseContextualizedService):
         """Update a ExecutionJob in the Storm WS.
 
         Args:
-            job (Job): Job object.
+            job (ExecutionJob): Job object.
 
         Returns:
-            Job: Job object updated in the Storm WS.
+            ExecutionJobJob: ExecutionJob object updated in the Storm WS.
         """
-        selected_job = self._context.job.get(job.id)
+        selected_job = self._context.execution.get(job.id)
 
         # monkey patch to update the properties.
-        for attr in ["service", "pipeline_id"]:
+        for attr in ["service", "workflow_id"]:
             attr_val = getattr(job, attr)
 
             if attr_val:  # avoiding consistency problems
@@ -89,29 +89,29 @@ class ExecutionJobService(BaseContextualizedService):
         """Describe a Storm WS Job.
 
         Args:
-            id_ (str): Job Identifier.
+            id_ (str): ExecutionJob Identifier.
 
             kwargs: Extra parameters to the HTTP request library.
 
         Returns:
-            Job: Job Object.
+            ExecutionJob: ExecutionJob Object.
         """
         # getting the description
-        return self._context.job.get(id_, **kwargs)
+        return self._context.execution.get(id_, **kwargs)
 
     @parse_arguments_as_dict(sep=",", argument_key_value_sep="=", inject_key="json")
     def start(self, id_: str, **kwargs) -> ExecutionJob:
-        """Start a Storm WS Job.
+        """Start a Storm WS Execution Job.
 
         Args:
-            id_ (str): Job Identifier.
+            id_ (str): ExecutionJob Identifier.
 
             kwargs: Extra parameters to the HTTP request library.
 
         Returns:
-            Job: Job Object.
+            ExecutionJob: ExecutionJob Object.
         """
-        return self._context.job.start_job(id_, request_options=kwargs)
+        return self._context.execution.start_job(id_, request_options=kwargs)
 
     def services(self, **kwargs) -> ExecutionJobServiceList:
         """List the available services to execute the Storm WS Job.
@@ -120,9 +120,9 @@ class ExecutionJobService(BaseContextualizedService):
             kwargs: Extra parameters to the HTTP request library.
 
         Returns:
-            JobServiceList: List with available execution execution services.
+            ExecutionJobServiceList: List with available execution execution services.
         """
-        return self._context.job.list_services(**kwargs)
+        return self._context.execution.list_services(**kwargs)
 
     @parse_arguments_as_dict(sep="&", argument_key_value_sep=":")
     def search(self, **kwargs) -> ExecutionJobList:
@@ -132,6 +132,6 @@ class ExecutionJobService(BaseContextualizedService):
             kwargs: Extra arguments to search method.
 
         Returns:
-            JobList: List with the founded Jobs.
+            ExecutionJobList: List with the founded Jobs.
         """
-        return self._context.job.search(**kwargs)
+        return self._context.execution.search(**kwargs)

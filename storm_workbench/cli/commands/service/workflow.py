@@ -15,11 +15,11 @@ from storm_workbench.cli.graphics.tree import aesthetic_tree_base
 
 
 @service.group(name="workflow")
-def pipeline():
-    """Pipeline management."""
+def workflow():
+    """Workflow management."""
 
 
-@pipeline.command(name="describe")
+@workflow.command(name="describe")
 @click.option(
     "--id",
     required=True,
@@ -27,8 +27,8 @@ def pipeline():
     help="Compendium identifier.",
 )
 @click.pass_obj
-def pipeline_describe(obj, id=None):
-    """Get a Pipeline description."""
+def workflow_describe(obj, id=None):
+    """Get a Workflow description."""
     workbench = obj["workbench"]
 
     try:
@@ -39,25 +39,25 @@ def pipeline_describe(obj, id=None):
         aesthetic_traceback(show_locals=True)
 
 
-@pipeline.command(name="finish")
+@workflow.command(name="finish")
 @click.option(
     "--id",
     required=True,
     type=str,
-    help="Pipeline identifier.",
+    help="Workflow identifier.",
 )
 @click.pass_obj
-def pipeline_finish(obj, id):
-    """Finish a Storm WS Pipeline."""
+def workflow_finish(obj, id):
+    """Finish a Storm WS Workflow."""
     workbench = obj["workbench"]
 
     try:
-        pipeline_finished = workbench.stage.ws.workflow.finish(id)
+        workflow_finished = workbench.stage.ws.workflow.finish(id)
 
         tree = aesthetic_tree_base(
-            title="\n[bold]Pipeline - Finish[/bold]",
+            title="\n[bold]Workflow - Finish[/bold]",
             children=[
-                f"[blue]Project ID[/blue]: {pipeline_finished.id}",
+                f"[blue]Project ID[/blue]: {workflow_finished.id}",
                 f"[blue]Status[/blue]: [green]Finished[/green]",
             ],
         )
@@ -67,34 +67,34 @@ def pipeline_finish(obj, id):
         aesthetic_traceback(show_locals=True)
 
 
-@pipeline.command(name="create")
+@workflow.command(name="create")
 @click.option(
     "--id",
     required=True,
     type=str,
-    help="Pipeline Identifier.",
+    help="Workflow Identifier.",
 )
 @click.option(
     "--title",
     required=True,
     type=str,
-    help="Pipeline title.",
+    help="Workflow title.",
 )
 @click.option(
     "--description",
     required=True,
     type=str,
-    help="Pipeline description.",
+    help="Workflow description.",
 )
 @click.option(
     "--version",
     required=True,
     type=str,
-    help="Pipeline Version.",
+    help="Workflow Version.",
 )
 @click.pass_obj
-def pipeline_create(obj, id=None, title=None, description=None, version=None):
-    """Create a new Pipeline."""
+def workflow_create(obj, id=None, title=None, description=None, version=None):
+    """Create a new Workflow."""
     workbench = obj["workbench"]
 
     try:
@@ -103,12 +103,12 @@ def pipeline_create(obj, id=None, title=None, description=None, version=None):
             id=id, metadata=dict(title=title, description=description, version=version)
         )
 
-        pipeline_created = workbench.stage.ws.workflow.create(workflow)
+        workflow_created = workbench.stage.ws.workflow.create(workflow)
 
         tree = aesthetic_tree_base(
-            title="\n[bold]Pipeline - Create[/bold]",
+            title="\n[bold]Workflow - Create[/bold]",
             children=[
-                f"[blue]Pipeline ID[/blue]: {pipeline_created.id}",
+                f"[blue]Workflow ID[/blue]: {workflow_created.id}",
                 f"[blue]Status[/blue]: [green]Created[/green]",
             ],
         )
@@ -118,12 +118,12 @@ def pipeline_create(obj, id=None, title=None, description=None, version=None):
         aesthetic_traceback(show_locals=True)
 
 
-@pipeline.command(name="add-compendium")
+@workflow.command(name="add-compendium")
 @click.option(
     "--workflow-id",
     required=False,
     type=str,
-    help="Pipeline Identifier.",
+    help="Workflow Identifier.",
 )
 @click.option(
     "--compendium-id",
@@ -132,19 +132,19 @@ def pipeline_create(obj, id=None, title=None, description=None, version=None):
     help="Storm WS Compendium Record identifier (Published).",
 )
 @click.pass_obj
-def pipeline_add_compendium(obj, pipeline_id=None, compendium_id=None):
-    """Add a Compendium Record (Published) in the Pipeline."""
+def workflow_add_compendium(obj, workflow_id=None, compendium_id=None):
+    """Add a Compendium Record (Published) in the Workflow."""
     workbench = obj["workbench"]
 
     try:
-        pipeline_updated = workbench.stage.ws.workflow.add_compendium(
-            pipeline_id, compendium_id
+        workflow_updated = workbench.stage.ws.workflow.add_compendium(
+            workflow_id, compendium_id
         )
 
         tree = aesthetic_tree_base(
-            title="\n[bold]Pipeline - Add Compendium[/bold]",
+            title="\n[bold]Workflow - Add Compendium[/bold]",
             children=[
-                f"[blue]Pipeline ID[/blue]: {pipeline_updated.id}",
+                f"[blue]Workflow ID[/blue]: {workflow_updated.id}",
                 f"[blue]Status[/blue]: [green]Compendium Added[/green]",
             ],
         )
@@ -154,12 +154,12 @@ def pipeline_add_compendium(obj, pipeline_id=None, compendium_id=None):
         aesthetic_traceback(show_locals=True)
 
 
-@pipeline.command(name="remove-compendium")
+@workflow.command(name="remove-compendium")
 @click.option(
     "--workflow-id",
     required=False,
     type=str,
-    help="Pipeline Identifier.",
+    help="Workflow Identifier.",
 )
 @click.option(
     "--compendium-pid",
@@ -168,19 +168,19 @@ def pipeline_add_compendium(obj, pipeline_id=None, compendium_id=None):
     help="Storm WS Compendium Record identifier (Published).",
 )
 @click.pass_obj
-def pipeline_remove_compendium(obj, pipeline_id=None, compendium_pid=None):
-    """Remove a Compendium Record from the Pipeline."""
+def workflow_remove_compendium(obj, workflow_id=None, compendium_pid=None):
+    """Remove a Compendium Record from the Workflow."""
     workbench = obj["workbench"]
 
     try:
-        pipeline_updated = workbench.stage.ws.workflow.remove_compendium(
-            pipeline_id, compendium_pid
+        workflow_updated = workbench.stage.ws.workflow.remove_compendium(
+            workflow_id, compendium_pid
         )
 
         tree = aesthetic_tree_base(
-            title="\n[bold]Pipeline - Remove Compendium[/bold]",
+            title="\n[bold]Workflow - Remove Compendium[/bold]",
             children=[
-                f"[blue]Pipeline ID[/blue]: {pipeline_updated.id}",
+                f"[blue]Workflow ID[/blue]: {workflow_updated.id}",
                 f"[blue]Status[/blue]: [green]Compendium Removed[/green]",
             ],
         )
@@ -190,7 +190,7 @@ def pipeline_remove_compendium(obj, pipeline_id=None, compendium_pid=None):
         aesthetic_traceback(show_locals=True)
 
 
-@pipeline.command(name="search")
+@workflow.command(name="search")
 @click.option(
     "--query",
     required=False,
@@ -199,14 +199,14 @@ def pipeline_remove_compendium(obj, pipeline_id=None, compendium_pid=None):
     help="Search query used to filter results based on ElasticSearch's query string syntax.",
 )
 @click.pass_obj
-def pipeline_search(obj, query):
-    """Search Storm WS Pipelines."""
+def workflow_search(obj, query):
+    """Search Storm WS Workflow."""
     workbench = obj["workbench"]
 
     try:
-        pipeline_search_result = workbench.stage.ws.workflow.search(q=query)
+        workflow_search_result = workbench.stage.ws.workflow.search(q=query)
 
-        if pipeline_search_result:
+        if workflow_search_result:
             # declaring the table structure:
             table_declaration = {
                 "ID": "id",
@@ -218,7 +218,7 @@ def pipeline_search(obj, query):
 
             # generating and presenting the table.
             table = aesthetic_table_by_document(
-                "Search result - Pipelines", table_declaration, pipeline_search_result
+                "Search result - Workflows", table_declaration, workflow_search_result
             )
             aesthetic_print(table, 0)
 
@@ -228,27 +228,27 @@ def pipeline_search(obj, query):
         aesthetic_traceback(show_locals=True)
 
 
-@pipeline.command(name="delete")
+@workflow.command(name="delete")
 @click.option(
     "--id",
     required=True,
     type=str,
-    help="Pipeline identifier.",
+    help="Workflow identifier.",
 )
 @click.pass_obj
-def pipeline_delete(obj, id):
-    """Delete a Pipeline from Storm WS."""
+def workflow_delete(obj, id):
+    """Delete a Workflow from Storm WS."""
     workbench = obj["workbench"]
 
     remove = click.confirm(
-        "This command will delete the Pipeline from the Storm WS. Are you sure you want to continue ?",
+        "This command will delete the Workflow from the Storm WS. Are you sure you want to continue ?",
         abort=True,
     )
 
     if remove:
         try:
             workbench.stage.ws.workflow.delete(id)
-            aesthetic_print("[blue]Status[/blue]: [green]Pipeline Deleted[/green]")
+            aesthetic_print("[blue]Status[/blue]: [green]Workflow Deleted[/green]")
 
         except:
             aesthetic_traceback(show_locals=True)

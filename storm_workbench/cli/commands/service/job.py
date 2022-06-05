@@ -15,20 +15,20 @@ from storm_workbench.cli.graphics.tree import aesthetic_tree_base
 
 
 @service.group(name="execution")
-def job():
-    """Job Execution management."""
+def execution_job():
+    """Execution Job management."""
 
 
-@job.command(name="describe")
+@execution_job.command(name="describe")
 @click.option(
     "--id",
     required=True,
     type=str,
-    help="Job identifier.",
+    help="Execution Job identifier.",
 )
 @click.pass_obj
-def job_describe(obj, id=None):
-    """Get a Job description."""
+def execution_job_describe(obj, id=None):
+    """Get a ExecutionJob description."""
     workbench = obj["workbench"]
 
     try:
@@ -39,34 +39,34 @@ def job_describe(obj, id=None):
         aesthetic_traceback(show_locals=True)
 
 
-@job.command(name="create")
+@execution_job.command(name="create")
 @click.option(
     "--workflow-id",
     required=True,
     type=str,
-    help="Pipeline Identifier.",
+    help="Workflow Identifier.",
 )
 @click.option(
     "--service",
     required=True,
     type=str,
-    help="Service used to execute the Job.",
+    help="Service used to execute the Execution Job.",
 )
 @click.pass_obj
-def job_create(obj, pipeline_id=None, service=None):
-    """Create a new Job."""
+def execution_job_create(obj, workflow_id=None, service=None):
+    """Create a new ExecutionJob."""
     workbench = obj["workbench"]
 
     try:
         # creating the execution object
-        job_obj = ExecutionJob(pipeline_id=pipeline_id, service=service)
+        execution_job_obj = ExecutionJob(workflow_id=workflow_id, service=service)
 
-        job_created = workbench.stage.ws.execution.create(job_obj)
+        execution_job_created = workbench.stage.ws.execution.create(execution_job_obj)
 
         tree = aesthetic_tree_base(
-            title="\n[bold]Job - Create[/bold]",
+            title="\n[bold]Execution Job - Create[/bold]",
             children=[
-                f"[blue]Job ID[/blue]: {job_created.id}",
+                f"[blue]Execution Job ID[/blue]: {execution_job_created.id}",
                 f"[blue]Status[/blue]: [green]Created[/green]",
             ],
         )
@@ -76,40 +76,40 @@ def job_create(obj, pipeline_id=None, service=None):
         aesthetic_traceback(show_locals=True)
 
 
-@job.command(name="update")
+@execution_job.command(name="update")
 @click.option(
     "--id",
     required=True,
     type=str,
-    help="Job Identifier.",
+    help="Execution Job Identifier.",
 )
 @click.option(
     "--workflow-id",
     required=False,
     type=str,
-    help="Pipeline Identifier.",
+    help="Workflow Identifier.",
 )
 @click.option(
     "--service",
     required=False,
     type=str,
-    help="Service used to execute the Job.",
+    help="Service used to execute the Execution Job.",
 )
 @click.pass_obj
-def job_update(obj, id=None, pipeline_id=None, service=None):
-    """Update an existing Storm WS Job."""
+def execution_job_update(obj, id=None, workflow_id=None, service=None):
+    """Update an existing Storm WS Execution Job."""
     workbench = obj["workbench"]
 
     try:
         # creating the execution object.
-        job_obj = ExecutionJob(id=id, pipeline_id=pipeline_id, service=service)
+        execution_job_obj = ExecutionJob(id=id, workflow_id=workflow_id, service=service)
 
-        job_updated = workbench.stage.ws.execution.update(job_obj)
+        execution_job_updated = workbench.stage.ws.execution.update(execution_job_obj)
 
         tree = aesthetic_tree_base(
-            title="\n[bold]Job - Update[/bold]",
+            title="\n[bold]Execution Job - Update[/bold]",
             children=[
-                f"[blue]Job ID[/blue]: {job_updated.id}",
+                f"[blue]Execution Job ID[/blue]: {execution_job_updated.id}",
                 f"[blue]Status[/blue]: [green]Updated[/green]",
             ],
         )
@@ -119,30 +119,30 @@ def job_update(obj, id=None, pipeline_id=None, service=None):
         aesthetic_traceback(show_locals=True)
 
 
-@job.command(name="delete")
+@execution_job.command(name="delete")
 @click.option(
     "--id",
     required=True,
     type=str,
-    help="Job identifier.",
+    help="Execution Job identifier.",
 )
 @click.pass_obj
-def job_delete(obj, id=None):
+def execution_job_delete(obj, id=None):
     """Delete an existing Storm WS Job."""
     workbench = obj["workbench"]
 
     try:
         workbench.stage.ws.execution.delete(id)
-        aesthetic_print("[blue]Status[/blue]: [green]Job Deleted[/green]", 0)
+        aesthetic_print("[blue]Status[/blue]: [green]Execution Job Deleted[/green]", 0)
 
     except:
         aesthetic_traceback(show_locals=True)
 
 
-@job.command(name="services")
+@execution_job.command(name="services")
 @click.pass_obj
-def job_services(obj):
-    """List the available execution execution services."""
+def execution_job_services(obj):
+    """List the available execution job services."""
     workbench = obj["workbench"]
 
     try:
@@ -162,7 +162,7 @@ def job_services(obj):
 
             # generating and presenting the table.
             table = aesthetic_table_by_document(
-                "Search result - Job Execution Services",
+                "Search result - Execution Job Services",
                 table_declaration,
                 available_execution_services,
             )
@@ -172,7 +172,7 @@ def job_services(obj):
         aesthetic_traceback(show_locals=True)
 
 
-@job.command(name="search")
+@execution_job.command(name="search")
 @click.option(
     "--query",
     required=False,
@@ -181,7 +181,7 @@ def job_services(obj):
     help="Search query used to filter results based on ElasticSearch's query string syntax.",
 )
 @click.pass_obj
-def job_search(obj, query):
+def execution_job_search(obj, query):
     """Search Storm WS Jobs."""
     workbench = obj["workbench"]
 
@@ -194,13 +194,13 @@ def job_search(obj, query):
                 "ID": "id",
                 "Service": "service",
                 "Project ID": "project_id",
-                "Pipeline ID": "pipeline_id",
+                "Workflow ID": "workflow_id",
                 "Status": "status",
             }
 
             # generating and presenting the table.
             table = aesthetic_table_by_document(
-                "Search result - Jobs", table_declaration, job_search_result
+                "Search result - Execution Jobs", table_declaration, job_search_result
             )
             aesthetic_print(table, 0)
 
@@ -210,31 +210,31 @@ def job_search(obj, query):
         aesthetic_traceback(show_locals=True)
 
 
-@job.command(name="start")
+@execution_job.command(name="start")
 @click.option(
     "--id",
     required=True,
     type=str,
-    help="Pipeline Identifier.",
+    help="Workflow Identifier.",
 )
 @click.option(
     "--args",
     required=False,
     multiple=True,
-    help="Extra arguments to the Job Resource (e.g., Used to define arguments like Service Token).",
+    help="Extra arguments to the Execution Job Resource (e.g., Used to define arguments like Service Token).",
 )
 @click.pass_obj
-def job_start(obj, id=None, args=None):
+def execution_job_start(obj, id=None, args=None):
     """Start the execution of an existing Job."""
     workbench = obj["workbench"]
 
     try:
-        job_started = workbench.stage.ws.execution.start(id, _params=",".join(args))
+        execution_job_started = workbench.stage.ws.execution.start(id, _params=",".join(args))
 
         tree = aesthetic_tree_base(
-            title="\n[bold]Job - Execution[/bold]",
+            title="\n[bold]Execution Job - Execution[/bold]",
             children=[
-                f"[blue]Job ID[/blue]: {job_started.id}",
+                f"[blue]Execution Job ID[/blue]: {execution_job_started.id}",
                 f"[blue]Status[/blue]: [green]Execution started[/green]",
             ],
         )

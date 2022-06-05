@@ -8,8 +8,8 @@
 from .compendium import compendium
 from .context import context
 from .deposit import deposit
-from .job import job
-from .pipeline import pipeline
+from .job import execution_job
+from .workflow import workflow
 from .project import project
 from .service import service
 

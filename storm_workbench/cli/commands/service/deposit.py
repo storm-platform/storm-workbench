@@ -16,7 +16,7 @@ from storm_workbench.cli.graphics.tree import aesthetic_tree_base
 
 @service.group(name="deposit")
 def deposit():
-    """Deposit management."""
+    """Deposit Job management."""
 
 
 @deposit.command(name="describe")
