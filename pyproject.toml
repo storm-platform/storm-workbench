@@ -78,13 +78,6 @@ gh-md-to-html = { extras = ["offline_conversion"], version = "^1.21.2" }
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
 
-[tool.poetry.extras]
-# CLI
-cli = ["rich", "asciidag"]
-
-# BagIt (Exporter)
-exporter-bagit = ["bagit"]
-
 [tool.poetry.scripts]
 # CLI
 workbench = "storm_workbench.cli.cli:workbench_cli"
