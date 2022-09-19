@@ -37,15 +37,18 @@ dynaconf = "^3.1.7"
 #
 # CLI (Optional)
 #
-rich = { version = "^10.16.1", optional = true }
-asciidag = { version = "^0.2.0", optional = true }
+rich = { version = "^10.16.1", optional = false }
+asciidag = { version = "^0.2.0", optional = false }
 
 #
 # Exporters (Optional)
 #
 
 # BagIt
-bagit = { version = "^1.8.1", optional = true }
+bagit = { version = "^1.8.1", optional = false }
+
+# Reprozip
+reprounzip = { git = "https://github.com/storm-platform/tp-reprozip", rev = "1.0.x", subdirectory = "reprounzip" }
 
 #
 # Storm
