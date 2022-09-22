@@ -1,0 +1,3 @@
+steps:
+  generate_ndwi:
+    command: ["python3", "analysis/01_generate-ndwi.py"]
