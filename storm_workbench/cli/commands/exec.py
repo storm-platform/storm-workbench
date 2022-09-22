@@ -30,7 +30,7 @@ def exec_(ctx):
 
 
 @exec_.command(name="run")
-@click.argument("command", required=True, nargs=-1)
+@click.argument("command", required=False, nargs=-1)
 @click.option(
     "-n",
     "--name",
@@ -88,7 +88,7 @@ def exec_run(obj, command=None, name=None, description=None, stormfile=None):
 
         workbench = obj["workbench"]
         workbench.stage.operation.execution.run(
-            name=name, description=description, command=command, stormfile=stormfile
+            name=name, description=description, command=command, stormfile=Path(stormfile.decode())
         )
 
         aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Finished!", 0)
