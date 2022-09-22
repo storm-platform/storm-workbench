@@ -14,13 +14,13 @@ from compendium import ndwi2
 #
 
 # CBERS-4a/AWFI - Band 14 brick (2018-08-31 to 2019-08-31)
-brick_green_input = Path('data/input_data/bricks/brick-cbers4-awfi-band14.tif')
+brick_green_input = Path("data/input_data/bricks/brick-cbers4-awfi-band14.tif")
 
 # CBERS-4a/AWFI - Band 16 brick (2018-08-31 to 2019-08-31)
-brick_nir_input = Path('data/input_data/bricks/brick-cbers4-awfi-band16.tif')
+brick_nir_input = Path("data/input_data/bricks/brick-cbers4-awfi-band16.tif")
 
 # Output
-brick_output = Path('data/derived_data/brick-cbers4-awfi-ndwi2.tif')
+brick_output = Path("data/derived_data/brick-cbers4-awfi-ndwi2.tif")
 
 #
 # 1. Generating NDWI

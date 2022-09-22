@@ -13,7 +13,9 @@ import rasterio as rio
 from joblib import Parallel, delayed
 
 
-def _ndwi2(brick_green: str, brick_nir: str, layer_idx: str, window: rio.windows.Window) -> Tuple:
+def _ndwi2(
+    brick_green: str, brick_nir: str, layer_idx: str, window: rio.windows.Window
+) -> Tuple:
     """Calculate the Normalized Difference Water Index (NDWI2)."""
     nir = rio.open(brick_nir, count=layer_idx).read(window=window)
     green = rio.open(brick_green, count=layer_idx).read(window=window)
@@ -21,7 +23,9 @@ def _ndwi2(brick_green: str, brick_nir: str, layer_idx: str, window: rio.windows
     return (green - nir) / (green + nir), window
 
 
-def ndwi2(brick_green_input: Path, brick_nir_input: Path, brick_output: Path, n_jobs: int = 3) -> Path:
+def ndwi2(
+    brick_green_input: Path, brick_nir_input: Path, brick_output: Path, n_jobs: int = 3
+) -> Path:
     """Calculate the Normalized Difference Water Index (NDWI2).
 
     Args:
@@ -51,8 +55,12 @@ def ndwi2(brick_green_input: Path, brick_nir_input: Path, brick_output: Path, n_
     brick_green_input = Path(brick_green_input)
     brick_nir_input = Path(brick_nir_input)
 
-    if not all([b.exists() or b.is_dir()] for b in [brick_green_input, brick_nir_input]):
-        raise ValueError("Invalid input. This brick paths must be a valid `brick raster` file.")
+    if not all(
+        [b.exists() or b.is_dir()] for b in [brick_green_input, brick_nir_input]
+    ):
+        raise ValueError(
+            "Invalid input. This brick paths must be a valid `brick raster` file."
+        )
 
     # loading the brick and calculate the ndwi2
     brick_ds_1 = rio.open(brick_green_input)
@@ -64,10 +72,7 @@ def ndwi2(brick_green_input: Path, brick_nir_input: Path, brick_output: Path, n_
     assert brick_ds_1.shape == brick_ds_2.shape
 
     profile = brick_ds_1.profile.copy()
-    profile.update(dict(
-        dtype="float32",
-        driver="GTiff"
-    ))
+    profile.update(dict(dtype="float32", driver="GTiff"))
 
     with rio.open(brick_output, "w", **profile) as dst:
         for layer_idx in range(1, reference.count + 1):
