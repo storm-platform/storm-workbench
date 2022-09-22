@@ -83,12 +83,15 @@ def exec_run(obj, command=None, name=None, description=None, stormfile=None):
         "[bold cyan]Storm Workbench[/bold cyan]: Reproducible Execution :arrows_counterclockwise:"
     )
 
+    if type(stormfile) == bytes:
+        stormfile = Path(stormfile.decode())
+
     try:
         aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Running...", 0)
 
         workbench = obj["workbench"]
         workbench.stage.operation.execution.run(
-            name=name, description=description, command=command, stormfile=Path(stormfile.decode())
+            name=name, description=description, command=command, stormfile=stormfile
         )
 
         aesthetic_print("[bold cyan]Storm Workbench[/bold cyan]: Finished!", 0)
