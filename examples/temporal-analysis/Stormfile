@@ -1,3 +1,11 @@
 steps:
   generate_ndwi:
     command: ["python3", "analysis/01_generate-ndwi.py"]
+
+  extract_ts:
+    command: ["python3", "analysis/02_extract-time-series.py"]
+    depends: ["generate_ndwi"]
+
+  visualize_ts:
+    command: ["python3", "analysis/03_visualizing-time-series.py"]
+    depends: ["extract_ts"]
