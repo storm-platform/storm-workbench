@@ -7,29 +7,38 @@
 
 step_1:
 	@echo "Running experiment"
-	workbench exec run --name step-1 python analysis/01_generate-ndwi.py
+	workbench exec run \
+		--name "(Step 1) NDWI processing" \
+		--description "Processing data cube (in RasterBrick format) to generate a NDWI Data Cube" \
+		python analysis/01_generate-ndwi.py
 
 	@echo "Uploading data to Storm WS"
-	workbench service compendium draft-new --source "step-1"
-	workbench service compendium files-upload --source "step-1"
+	workbench service compendium draft-new --source "(Step 1) NDWI processing"
+	workbench service compendium files-upload --source "(Step 1) NDWI processing"
 
 step_2:
 	@echo "Running experiment"
-	workbench exec run --name step-2 python analysis/02_extract-time-series.py
+	workbench exec run \
+		  --name "(Step 2) Extracting NDWI Time Series" \
+		  --description "Extracting time series from NDWI Data Cubes (in RasterBrick format)" \
+  		  python analysis/02_extract-time-series.py
 
 	@echo "Uploading data to Storm WS"
-	workbench service compendium draft-new --source "step-2"
-	workbench service compendium files-upload --source "step-2"
+	workbench service compendium draft-new --source "(Step 2) Extracting NDWI Time Series"
+	workbench service compendium files-upload --source "(Step 2) Extracting NDWI Time Series"
 
 step_3:
 	@echo "Running experiment"
-	workbench exec run --name step-3 python analysis/03_visualizing-time-series.py
+	workbench exec run \
+		  --name "(Step 3) Visualizing NDWI Time Series" \
+		  --description "Visualizing Time Series data extracted from NDWI Data Cubes." \
+		  python analysis/03_visualizing-time-series.py
 
 	@echo "Uploading data to Storm WS"
-	workbench service compendium draft-new --source "step-3"
-	workbench service compendium files-upload --source "step-3"
+	workbench service compendium draft-new --source "(Step 3) Visualizing NDWI Time Series"
+	workbench service compendium files-upload --source "(Step 3) Visualizing NDWI Time Series"
 
-produce-result: step_1 step_2 step_3
+produce-result: step_1 step_2 step_3  ## Execute all the experiment steps.
 
 publish:
 	 workbench service compendium draft-publish --id $(C1)
