@@ -37,17 +37,22 @@ brick_ds = rio.open(brick_input)
 samples = gpd.read_file(samples_input, layer=samples_layer)
 
 #
-# 3. Converting samples CRS to be the same in the image
+# 3. Filtering samples
+#
+samples = samples[~samples.geometry.is_empty]
+
+#
+# 4. Converting samples CRS to be the same in the image
 #
 samples = samples.to_crs(brick_ds.crs)
 
 #
-# 4. Extracting data from brick
+# 5. Extracting data from brick
 #
 samples_extracted = brick_ds.sample([(p.x, p.y) for p in samples.geometry])
 samples_extracted = list(samples_extracted)
 
 #
-# 5. Saving the result
+# 6. Saving the result
 #
 pd.DataFrame(samples_extracted).T.to_csv(table_output)
