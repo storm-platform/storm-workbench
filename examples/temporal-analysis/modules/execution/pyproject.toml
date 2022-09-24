@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "temporal-analysis-execution"
+version = "0.1.0"
+description = "Environment to manage workflow execution using Reana Cluster"
+authors = ["Felipe Carlos <efelipecarlos@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+reana-client = "^0.8.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
