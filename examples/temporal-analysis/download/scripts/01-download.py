@@ -126,4 +126,4 @@ crop_brick_by_polygon(green_brick_file, green_brick_cropped, polygon_geometry)
 # 4.2. NIR Band brick
 nir_brick_cropped = output_dir_nir_band / "brick_roi.tif"
 
-crop_brick_by_polygon(green_brick_file, nir_brick_cropped, polygon_geometry)
+crop_brick_by_polygon(nir_brick_file, nir_brick_cropped, polygon_geometry)
