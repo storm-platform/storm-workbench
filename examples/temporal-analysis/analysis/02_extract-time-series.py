@@ -20,7 +20,8 @@ import rasterio as rio
 brick_input = Path("data/derived_data/brick-cbers4-awfi-ndwi2.tif")
 
 # Water points available in the application ROI.
-samples_input = Path("data/input_data/samples/samples-water.shp")
+samples_input = Path("data/input_data/samples/data-package.gpkg")
+samples_layer = "samples"
 
 # Output data
 table_output = Path("data/derived_data/sample-water-timeseries.csv")
@@ -33,7 +34,7 @@ brick_ds = rio.open(brick_input)
 #
 # 2. Loading samples
 #
-samples = gpd.read_file(samples_input)
+samples = gpd.read_file(samples_input, layer=samples_layer)
 
 #
 # 3. Converting samples CRS to be the same in the image
