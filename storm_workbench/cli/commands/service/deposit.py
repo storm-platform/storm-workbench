@@ -50,16 +50,16 @@ def deposit_describe(obj, id=None):
     "--workflow-id",
     required=True,
     multiple=True,
-    help="Identifier of the Pipeline witch with will be included in the Deposit bundle.",
+    help="Identifier of the Workflow witch with will be included in the Deposit bundle.",
 )
 @click.pass_obj
-def deposit_create(obj, service=None, pipeline_id=None):
+def deposit_create(obj, service=None, workflow_id=None):
     """Create a new Deposit."""
     workbench = obj["workbench"]
 
     try:
         # creating the deposit job object
-        deposit_obj = DepositJob(service=service, pipelines=pipeline_id)
+        deposit_obj = DepositJob(service=service, workflows=workflow_id)
 
         deposit_created = workbench.stage.ws.deposit.create(deposit_obj)
 
@@ -93,16 +93,16 @@ def deposit_create(obj, service=None, pipeline_id=None):
     "--workflow-id",
     required=False,
     multiple=True,
-    help="Identifier of the Pipeline witch with will be included in the Deposit bundle.",
+    help="Identifier of the Workflow witch with will be included in the Deposit bundle.",
 )
 @click.pass_obj
-def deposit_update(obj, id=None, service=None, pipeline_id=None):
+def deposit_update(obj, id=None, service=None, workflow_id=None):
     """Update an existing Storm WS Deposit."""
     workbench = obj["workbench"]
 
     try:
         # creating the deposit job object
-        deposit_obj = DepositJob(id=id, service=service, pipelines=pipeline_id)
+        deposit_obj = DepositJob(id=id, service=service, workflows=workflow_id)
 
         deposit_updated = workbench.stage.ws.deposit.update(deposit_obj)
 
@@ -192,7 +192,7 @@ def deposit_search(obj, query):
                 "ID": "id",
                 "Service": "service",
                 "Project ID": "project_id",
-                "Pipeline ID": "pipelines.0",  # ToDo: Generalize to accept multiple pipelines in the table.
+                "Workflow ID": "workflows.0",  # ToDo: Generalize to accept multiple workflows in the table.
                 "Status": "status",
             }
 
