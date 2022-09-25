@@ -17,7 +17,7 @@ step_0:
 	pip install poetry
 
 	poetry config virtualenvs.create false
-	poetry install
+	poetry install && pip install .
 
 step_1:
 	@echo "Running experiment"
@@ -84,6 +84,16 @@ workflow-create:  ## Create a new workflow based on the steps executed during th
 	workbench service workflow add-compendium \
 		--workflow-id $(W1) \
 		--compendium-id $(C3)
+
+workflow-execution-create:   ## Create a execution context for the Workflow
+	workbench service execution create \
+		--workflow-id $(W1) \
+		--service execution-reprozip-serial
+
+workflow-execution-execute:   ## Execute a Workflow
+	workbench service execution start \
+		--id $(E1) \
+		--args reana_access_token=$(R1)
 
 #
 # Documentation function (thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html)
