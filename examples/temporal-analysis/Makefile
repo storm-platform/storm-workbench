@@ -95,6 +95,13 @@ workflow-execution-execute:   ## Execute a Workflow
 		--id $(E1) \
 		--args reana_access_token=$(R1)
 
+checksum:  ##  Generate compendium files checksum
+	rm -rf checksums && mkdir -p checksums
+
+	find . -type f -exec md5sum {} > checksums/md5sums.txt \;
+	find . -type f -exec sha256sum {} > checksums/sha256sums.txt \;
+	find . -type f -exec sha512sum {} > checksums/sha512sums.txt \;
+
 #
 # Documentation function (thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html)
 #
