@@ -20,4 +20,5 @@ apt-get install -y \
             libsqlite3-dev wget curl \
             llvm libncursesw5-dev xz-utils \
             tk-dev libxml2-dev libxmlsec1-dev \
-            libffi-dev liblzma-dev libcairo2-dev
+            libffi-dev liblzma-dev libcairo2-dev \
+            python3.8-venv
